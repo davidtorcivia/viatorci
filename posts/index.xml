@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on viatorci.com</title>
+    <link>https://viatorci.com/posts/</link>
+    <description>Recent content in Posts on viatorci.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 09 Jun 2020 18:39:53 -0400</lastBuildDate>
+    
+	<atom:link href="https://viatorci.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+    <item>
+      <title>RTL SDR Example Configs</title>
+      <link>https://viatorci.com/posts/rtl-sdr-example-configs/</link>
+      <pubDate>Tue, 09 Jun 2020 18:39:53 -0400</pubDate>
+      
+      <guid>https://viatorci.com/posts/rtl-sdr-example-configs/</guid>
+      <description>RTL-SDR multichannel streaming 3 separate NYPD frequencies to icecast simultaneously:
+devices: ({ type = &amp;#34;rtlsdr&amp;#34;; index = 0; gain = 25; centerfreq = 476.725; correction = 4; sample_rate = 2.56; mode = &amp;#34;multichannel&amp;#34;; channels: ( { freq = 476.7625; modulation = &amp;#34;nfm&amp;#34;; outputs: ( { type = &amp;#34;icecast&amp;#34;; server = &amp;#34;icecast.example.com&amp;#34;; port = 8000; mountpoint = &amp;#34;brooklyn84-88&amp;#34;; name = &amp;#34;Brooklyn Precincts 84,88&amp;#34;; genre = &amp;#34;Brooklyn&amp;#34;; description = &amp;#34;NYPD Brooklyn Precincts 84,88 476.</description>
+    </item>
+    
+    
+    
+    
+    
+    <item>
+      <title>RTL-SDR, Police Scanners, and You</title>
+      <link>https://viatorci.com/posts/rtlsdr-police-scanner/</link>
+      <pubDate>Tue, 09 Jun 2020 16:04:43 -0400</pubDate>
+      
+      <guid>https://viatorci.com/posts/rtlsdr-police-scanner/</guid>
+      <description>Intro I&amp;rsquo;ve had a passing intrest in radio for years and upon discovering software defined radios (SDR) a few years ago, I was incredibly excited at the potential of these devices. For $30, give or take, you could have a radio dongle that can scan a huge amount of radio bandwidth and do all sorts of neat stuff with that. I set up an adsb receiver and recorded plane tracks locally (as well as shared to adsbexchange) to track police helicopters and other protest air traffic, but then I threw it in a closet (still running) and forgot about it.</description>
+    </item>
+    
+    
+  </channel>
+</rss>

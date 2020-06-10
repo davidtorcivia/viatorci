@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="https://viatorci.com/favicon.ico">
+    
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    <title>RTL SDR Example Configs</title>
+</head>
+<body><header id="banner">
+    <h2><a href="https://viatorci.com/">viatorci.com</a></h2>
+    <nav>
+        <ul>
+            <li><a href="https://viatorci.com/">posts</a></li>
+            
+            <li>
+                <a href="https://viatorci.com/about/">About</a>
+            </li>
+            
+        </ul>
+    </nav>
+</header>
+<main id="content">
+<article>
+    <header id="post-header">
+        <h1>RTL SDR Example Configs</h1><time>June 9, 2020</time></header><p>RTL-SDR multichannel streaming 3 separate NYPD frequencies to icecast simultaneously:</p>
+<div class="highlight"><pre class="chroma"><code class="language-batch" data-lang="batch">devices:
+<span class="p">(</span>{
+  <span class="k">type</span> = <span class="s2">&#34;rtlsdr&#34;</span>;
+  index = 0;
+  gain = 25;
+  centerfreq = 476.725;
+  correction = 4;
+  sample_rate = 2.56;
+  mode = <span class="s2">&#34;multichannel&#34;</span>;
+  channels:
+  <span class="p">(</span>
+    {
+      freq = 476.7625;
+	  modulation = <span class="s2">&#34;nfm&#34;</span>;
+      outputs: 
+	  <span class="p">(</span>
+        {
+	  <span class="k">type</span> = <span class="s2">&#34;icecast&#34;</span>;
+	  server = <span class="s2">&#34;icecast.example.com&#34;</span>;
+          port = 8000;
+          mountpoint = <span class="s2">&#34;brooklyn84-88&#34;</span>;
+          name = <span class="s2">&#34;Brooklyn Precincts 84,88&#34;</span>;
+          genre = <span class="s2">&#34;Brooklyn&#34;</span>;
+		  description = <span class="s2">&#34;NYPD Brooklyn Precincts 84,88 476.7625&#34;</span>;
+          username = <span class="s2">&#34;source&#34;</span>;
+          password = <span class="s2">&#34;password&#34;</span>;
+          }
+        <span class="p">)</span>;
+      },
+	      {
+      freq = 476.8125;
+	  modulation = <span class="s2">&#34;nfm&#34;</span>;
+      outputs: 
+	  <span class="p">(</span>
+        {
+	  <span class="k">type</span> = <span class="s2">&#34;icecast&#34;</span>;
+	  server = <span class="s2">&#34;icecast.example.com&#34;</span>;
+          port = 8000;
+          mountpoint = <span class="s2">&#34;queens110-115&#34;</span>;
+          name = <span class="s2">&#34;Queens Precinct 110,115&#34;</span>;
+          genre = <span class="s2">&#34;Queens&#34;</span>;
+		  description = <span class="s2">&#34;NYPD Queens Precinct 110,115 476.8125&#34;</span>;
+          username = <span class="s2">&#34;source&#34;</span>;
+          password = <span class="s2">&#34;password&#34;</span>;
+          }
+        <span class="p">)</span>;
+      },
+      {
+      freq = 476.7375;
+	  modulation = <span class="s2">&#34;nfm&#34;</span>;
+      outputs: 
+	  <span class="p">(</span>
+        {
+	  <span class="k">type</span> = <span class="s2">&#34;icecast&#34;</span>;
+	  server = <span class="s2">&#34;icecast.example.com&#34;</span>;
+          port = 8000;
+          mountpoint = <span class="s2">&#34;brooklyn77-79&#34;</span>;
+          name = <span class="s2">&#34;Brooklyn Precincts 77, 79&#34;</span>;
+          genre = <span class="s2">&#34;Brooklyn&#34;</span>;
+          description = <span class="s2">&#34;NYPD Brooklyn Precincts 77, 79 476.7375&#34;</span>;
+          username = <span class="s2">&#34;source&#34;</span>;
+          password = <span class="s2">&#34;password&#34;</span>;
+		 }
+        <span class="p">)</span>;
+      }
+	 <span class="p">)</span>;
+
+ }<span class="p">)</span>;
+</code></pre></div><p>RTL-SDR Multichannel streaming EVERY NYPD precinct (minus SI) simultaneously:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">devices:
+<span class="o">({</span>
+  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;rtlsdr&#34;</span><span class="p">;</span>
+  <span class="nv">index</span> <span class="o">=</span> 0<span class="p">;</span>
+  <span class="nv">gain</span> <span class="o">=</span> 25<span class="p">;</span>
+  <span class="nv">centerfreq</span> <span class="o">=</span> 476.725<span class="p">;</span>
+  <span class="nv">correction</span> <span class="o">=</span> 4<span class="p">;</span>
+  <span class="nv">sample_rate</span> <span class="o">=</span> 2.56<span class="p">;</span>
+  <span class="nv">mode</span> <span class="o">=</span> <span class="s2">&#34;multichannel&#34;</span><span class="p">;</span>
+  channels:
+  <span class="o">(</span>
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.3125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan20-24&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 20, 24&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 20, 24 476.3125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.3375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan10-13&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 10, 13&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 10, 13 476.3375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.3625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan26-30&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 26, 30&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 26, 30 476.3625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.3875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan19-23&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 19, 23&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 19, 23 476.3875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.4125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn72-76-78&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 72, 76, and 78&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 72, 76, and 78 476.4125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.4375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan6-9&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 6, 9&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 6 and 9 476.4375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.4625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn60-61&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 60, 61&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 60, 61 476.4625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.4875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx46-48&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 46, 48&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 46, 48 476.4875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.5125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn62-68&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 62, 68&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 62, 68 476.5125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.5375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx40-41&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 40, 41&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 40, 41 476.5375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.5625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan1-5-7&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 1, 5, and 7&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 1, 5, and 7 476.5625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.5875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan17&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 17, MTS, MTN&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 17, MTS, MTN 476.5875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.6125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens108-114&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precincts 108, 114&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Queens Precincts 108, 114 476.6125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.6375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan25-28-32&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 25, 28, and 32&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precincts 25, 28, and 32 476.6375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.6625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx50-52&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 50, 52&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precincts 50, 52 476.6625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.6875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn90-94&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 90, 94&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 90, 94 476.6875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.7125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens104-112&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precincts 104, 112&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Queens Precincts 104, 112 476.7125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+    <span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.7625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn84-88&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 84,88&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precincts 84,88 476.7625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	  <span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.7875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn81-83&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 80, 83&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 80, 83 476.7875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.8125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens110-115&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 110,115&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 110,115 476.8125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.8375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx42-44&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precinct 42, 44&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Bronx Precinct 42, 44 476.8375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.8625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn66-70&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precinct 66, 70&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precinct 66, 70 476.8625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.8875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;manhattan33-34&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Manhattan Precinct 33, 34&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Manhattan&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Manhattan Precinct 33, 34 476.8875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.9125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx43-45&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precinct 43, 45&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Bronx Precinct 43, 45 476.9125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.9375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn63-69&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precinct 63, 69&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precinct 63, 69 476.9375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.9625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;bronx47-49&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Bronx Precinct 47, 49&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Bronx&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Bronx Precinct 47, 49 476.9625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.9875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn73-75&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precinct 73, 75&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precinct 73, 75 476.9875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.0125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn67-71&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precinct 67, 71&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precinct 67, 71 477.0125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.0375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens103-107&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 103, 107&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 103, 107 477.0375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.0625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens109&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 109&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 109 477.0625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.0875<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens102-106&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 102, 106&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 102, 106 477.0875&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.1125<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens105-113&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 105, 113&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 105, 113 477.1125&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+	<span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 477.1375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;queens100-101&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Queens Precinct 100, 101&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Queens&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Queens Precinct 100, 101 477.1375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+    <span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.7375<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn77-79&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 77, 79&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+          <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precincts 77, 79 476.7375&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+		 <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>
+	 <span class="o">)</span><span class="p">;</span>
+
+ <span class="o">})</span><span class="p">;</span>
+</code></pre></div></article>
+
+        </main><footer id="footer">
+    CC0, please steal this site
+</footer>
+
+<script src="https://giraffe.viatorci.com/script.js" site="WUBAQTEV" defer></script></body>
+</html>

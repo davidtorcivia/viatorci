@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="https://viatorci.com/favicon.ico">
+    
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    <title>RTL-SDR, Police Scanners, and You</title>
+</head>
+<body><header id="banner">
+    <h2><a href="https://viatorci.com/">viatorci.com</a></h2>
+    <nav>
+        <ul>
+            <li><a href="https://viatorci.com/">posts</a></li>
+            
+            <li>
+                <a href="https://viatorci.com/about/">About</a>
+            </li>
+            
+        </ul>
+    </nav>
+</header>
+<main id="content">
+<article>
+    <header id="post-header">
+        <h1>RTL-SDR, Police Scanners, and You</h1><time>June 9, 2020</time></header><h1 id="intro">Intro</h1>
+<p>I&rsquo;ve had a passing intrest in radio for years and upon discovering software defined radios (SDR) a few years ago, I was incredibly excited at the potential of these devices. For $30, give or take, you could have a radio dongle that can scan a huge amount of radio bandwidth and do all sorts of neat stuff with that. I set up an adsb receiver and recorded plane tracks locally (as well as shared to adsbexchange) to track police helicopters and other protest air traffic, but then I threw it in a closet (still running) and forgot about it. Now we&rsquo;re in a particularly interesting moment in time so it&rsquo;s the perfect opporunity to repurpose these adsb devices for tracking police scanners. Here&rsquo;s how you can do the same.</p>
+<aside id="toc">
+    <h4>Table of Contents</h4>
+    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#getting-started">Getting Started</a>
+      <ol>
+        <li><a href="#shopping">Shopping</a></li>
+        <li><a href="#first-setup">First Setup</a></li>
+      </ol>
+    </li>
+    <li><a href="#install-rtlsdr-airband">Install RTLSDR-Airband</a>
+      <ol>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#install">Install</a></li>
+      </ol>
+    </li>
+    <li><a href="#rtl-sdr-dongle-offset-tuning">RTL-SDR Dongle Offset Tuning</a>
+      <ol>
+        <li><a href="#install-1">Install</a></li>
+        <li><a href="#run">Run</a></li>
+      </ol>
+    </li>
+    <li><a href="#rtlsdr-airband-config">RTLSDR-Airband Config</a></li>
+    <li><a href="#run-1">Run</a></li>
+  </ol>
+</nav>
+</aside>
+
+<h2 id="getting-started">Getting Started</h2>
+<p>For the purposes of this guide, I&rsquo;m going to make a lot of assumptions. I&rsquo;m assuming you&rsquo;re starting with no equipment, that you know how to use a command line and ssh but maybe don&rsquo;t have everything memorized, that you can troubleshoot on at least a basic level, and that you can look up ancillary information to adjust this tutorial to your own needs. There are a number of different ways of achieving the end result (<a href="cubicsdr.com">cubicsdr</a> for example is very easy and straightforward), but this guide assumes you want to leave things running 24/7 without tying up your laptop/desktop and wasting all that power.</p>
+<h3 id="shopping">Shopping</h3>
+<p>You&rsquo;ll need:</p>
+<ul>
+<li>RTL-SDR kit - this is the actual radio, antenna etc and could work just fine plugged into your computer <a href="https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/">$35</a></li>
+<li>Raspberry Pi of some sort (this guide uses a Raspberry Pi 4, but a 3 also works great. Anything less may be underpowered) ($40-60 depending on accessories like microSD, power, etc)</li>
+</ul>
+<p>Technically you could buy any R820T2 SDR and some are very cheap, but the RTL SDR is the cheapest one I would recommend to get consistent quality (my worst SDR has tuning off my 30MHz for example).</p>
+<h3 id="first-setup">First Setup</h3>
+<p>Okay, you&rsquo;ve got your pi so now we&rsquo;re going to set this up as a headless install because this is going to live in a closet anyway. Don&rsquo;t be scared, I&rsquo;ve got everything mapped out for you. If you&rsquo;re on Windows you&rsquo;ll need to download <a href="https://putty.org/">Putty</a> or similar. If you&rsquo;re not familiar with SSH, <a href="https://www.howtogeek.com/311287/how-to-connect-to-an-ssh-server-from-windows-macos-or-linux/">here is a tutorial</a> I hope is decent.</p>
+<p>To begin, we need to download the Pi operating system and create a disk image. The Raspberry Pi foundation has a program for doing this called <a href="https://www.raspberrypi.org/downloads/">Raspberry Pi Imager</a>. Download it and create a disk image of raspian on your microSD card. Once the program is done, add a file called <code>ssh</code> (no extension) to the root of the microSD. Insert the card, plug in your raspberry pi to the wall and to your router/switch/whatever and wait for it to boot. After a few minutes, log into your router and check DHCP leases for a device called something like &ldquo;raspberry pi&rdquo;. Note this IP and then connect to it via ssh, the default log in is <code>pi</code> with password <code>raspberry</code>.</p>
+<p>At first setup, run <code>sudo raspi-config</code> and go through the prompts. Change the main user information especially. Check for updates <code>sudo apt update</code> and install them <code>sudo apt full-upgrade</code>.</p>
+<h2 id="install-rtlsdr-airband">Install RTLSDR-Airband</h2>
+<p>There are a number of excellent software packages for SDR, but we&rsquo;re going to use <a href="https://github.com/szpajder/RTLSDR-Airband">RTLSDR-Airband</a> because it&rsquo;s fairly lightweight, optimized for the raspberry pi, can listen to as many channels as you have processing power for within the bandwidth of the device (~2.54 MHz or so for our RTLSDR sticks), and can easily output icecast and other streams of the resulting audio. Unfortunately, RTLSDR-Airband is not available in any packages, but fortunately it has <a href="https://github.com/szpajder/RTLSDR-Airband/wiki">excellent docs</a> to help us install.</p>
+<h3 id="dependencies">Dependencies</h3>
+<p>First we need to install the necessary packages and dependencies to build RTLSDR-Airband.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install build-essential libmp3lame-dev libshout3-dev libconfig++-dev
+</code></pre></div><p>If you&rsquo;re using Raspberry Pi v1, v2 or v3, additionally install Broadcom VideoCore GPU development headers and libraries:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install libraspberrypi-dev
+</code></pre></div><p>On all platforms other than RPi v1, v2 and v3, FFTW library is required:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install libfftw3-dev
+</code></pre></div><p>Since we&rsquo;re using RTL-SDR dongles, we need to install the drivers for them. These are handled by rtl-sdr library, which is packaged in most Linux distributions. On a Raspbian/Debian/Ubuntu install it with:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">apt-get install librtlsdr-dev
+</code></pre></div><h3 id="install">Install</h3>
+<p>create a directory for this, I made <code>mkdir RTLSDR-Airband</code> and then <code>cd</code> into it. Time to get all the files and unzip them (check to see the latest <a href="https://github.com/szpajder/RTLSDR-Airband/releases">release here</a> and swap as necessary):</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget -O v3.1.0.tar.gz https://github.com/szpajder/RTLSDR-Airband/archive/v3.1.0.tar.gz
+tar xvfz v3.1.0.tar.gz
+<span class="nb">cd</span> RTLSDR-Airband-3.1.0
+</code></pre></div><p>It&rsquo;s time to compile. We&rsquo;re going to use the <code>make</code> command, but there are a few flags we need to set. We can check these flags with <code>make help</code> or with the <a href="https://github.com/szpajder/RTLSDR-Airband/wiki/Compilation">docs</a>. In our case, we need to set a <code>PLATFORM=</code> argument. We&rsquo;re assuming you&rsquo;re using a rasp pi so:</p>
+<ul>
+<li><code>rpiv1</code> - Raspberry Pi version 1 (ARMv6 CPU, Broadcom VideoCore IV GPU)</li>
+<li><code>rpiv2</code> - Raspberry Pi version 2 or 3 (ARMv7 CPU, Broadcom VideoCore IV GPU)</li>
+<li><code>armv8-generic</code> - 64-bit ARM platforms, no VideoCore IV GPU (eg. Raspberry Pi version 4, Odroid C2)</li>
+</ul>
+<p>So for my raspberry pi 4 I would need <code>PLATFORM=armv8-generic</code></p>
+<p>But there&rsquo;s still an additional flag we need to set. Because we&rsquo;re monitoring narrow band FM channels, we need to enable NFM support (which unfortunately comes with a performance hit). The flag for this is <code>NFM=1</code>. There are other flags that can be set like <code>PULSE=1</code> if we want PulseAudio output, but we&rsquo;re reading headless so there&rsquo;s no need.</p>
+<p>The final make command for my raspbery pi is:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">make <span class="nv">PLATFORM</span><span class="o">=</span>armv8-generic <span class="nv">NFM</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div><p>Let it run until it finishes (might take a moment), then run <code>sudo make install</code>. The program should now be installed to <code>/usr/local/bin/rtl_airband</code>. The default configuration file will be installed to <code>/usr/local/etc/rtl_airband.conf</code> which we need to configure in a moment. First we need to calibrate our dongle.</p>
+<hr>
+<h2 id="rtl-sdr-dongle-offset-tuning">RTL-SDR Dongle Offset Tuning</h2>
+<p>RTL-SDR&rsquo;s are great and cheap, but they also vary quite a bit in quality because of that low cost. Fortunately there&rsquo;s a tool called <a href="https://github.com/steve-m/kalibrate-rtl">Kalibrate-RTL</a> to help us tune.</p>
+<h3 id="install-1">Install</h3>
+<p>I made a new folder called <code>kal</code> in the <code>RTLSDR-Airband</code> folder we created earlier. It&rsquo;s time to build kalibrate-rtl. The commands below install dependencies, download the kalibrate files, and navigate into the proper folder respecticely:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install build-essential libtool automake autoconf librtlsdr-dev libfftw3-dev
+git clone https://github.com/steve-m/kalibrate-rtl
+<span class="nb">cd</span> kalibrate-rtl
+</code></pre></div><p>Before we go any further there&rsquo;s <a href="https://github.com/steve-m/kalibrate-rtl/wiki/How-to-install">a bug</a> we need to fix in Raspberry Pi installs. We need to edit the <code>librtlsdr.pc</code> at <code>/usr/lib/arm-linux-gnueabihf/pkgconfig/</code> using your editor of choice. I&rsquo;ll do this with nano: <code>sudo nano /usr/lib/arm-linux-gnueabihf/pkgconfig/librtlsdr.pc</code> and then edit the file to look like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">prefix</span><span class="o">=</span>/usr
+<span class="nv">exec_prefix</span><span class="o">=</span><span class="si">${</span><span class="nv">prefix</span><span class="si">}</span>
+<span class="nv">libdir</span><span class="o">=</span><span class="si">${</span><span class="nv">exec_prefix</span><span class="si">}</span>/lib
+<span class="nv">includedir</span><span class="o">=</span><span class="si">${</span><span class="nv">prefix</span><span class="si">}</span>/include
+</code></pre></div><p>If there&rsquo;s anythign extra, leave it. Save, write, and close (<code>ctrl+x</code> in nano). If you moved directories, return to <code>kalibrate-rtl</code> git folder. Time to build and install:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./bootstrap <span class="o">&amp;&amp;</span> <span class="nv">CXXFLAGS</span><span class="o">=</span><span class="s1">&#39;-W -Wall -O3&#39;</span>
+./configure
+make
+sudo make install
+</code></pre></div><h3 id="run">Run</h3>
+<p>I had a ton of trouble finding a band using the default commands everyone shared online but finally got it working with the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./src/kal -s EGSM -e <span class="m">32</span> -g <span class="m">49</span>
+</code></pre></div><p>The reason this one works (probably) is that it&rsquo;s set to search EGSM, guesses the error amount <code>-e 32</code> (if you don&rsquo;t guess it fails for unknown reasons), and sets the gain <code>-g 49,6</code> (it apparently doesn&rsquo;t set your gain to anything reasonable if you don&rsquo;t force it). This will run (slowly) and eventually find some channels. Once you find a strong channel, write it down and run this (replacing <!-- raw HTML omitted --> with the channel, for example <code>2</code> with no &lt;&gt;):</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./src/kal -e <span class="m">32</span> -c &lt;YOUR CHANNEL HERE&gt; -g <span class="m">49</span>
+</code></pre></div><p>In a moment you should get a readout of your average absolute error. I ran mine a few times and ended up around 3.9ppm. If you want to check to see how many Hz this is, <a href="https://www.everythingrf.com/rf-calculators/ppm-to-hz-calculator">use this calculator</a> and enter the frequency you searched (GSM-900 channel 2 for me at 935.4Mhz). I was off by 3.64806Hz give or take which isn&rsquo;t bad.</p>
+<h2 id="rtlsdr-airband-config">RTLSDR-Airband Config</h2>
+<p>See example configs I&rsquo;ve written in <a href="/posts/rtl-sdr-example-configs">RTLSDR-Airband Example Configs</a>.</p>
+<p>First we need to set our device config. If we have multiple dongles, it&rsquo;s important to note their serials which we can get with the command <code>rtl_test</code> after installing the <code>rtl-sdr</code> package with the command <code>sudo apt install rtl-sdr</code>.</p>
+<p>Here&rsquo;s what mine looks like:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">devices:
+<span class="o">({</span>
+  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;rtlsdr&#34;</span><span class="p">;</span>
+  <span class="nv">index</span> <span class="o">=</span> 0<span class="p">;</span>
+  <span class="nv">gain</span> <span class="o">=</span> 25<span class="p">;</span>
+  <span class="nv">centerfreq</span> <span class="o">=</span> 476.725<span class="p">;</span>
+  <span class="nv">correction</span> <span class="o">=</span> 4<span class="p">;</span>
+  <span class="nv">sample_rate</span> <span class="o">=</span> 2.56<span class="p">;</span>
+  <span class="nv">mode</span> <span class="o">=</span> <span class="s2">&#34;multichannel&#34;</span><span class="p">;</span>
+</code></pre></div><p>To quickly walk through this, <code>type</code> sets the device type, <code>gain</code> sets power (20-40 should work well, higher isn&rsquo;t always better), <code>centerfreq</code> sets the center frequency we tune to (we can listen within 1.28MHz above and below this), <code>correction</code> is that ppm you measured above rounded to the narrowest whole number (no decimels), <code>sample_rate</code> is the bandwidth we&rsquo;ll be looking at, and <code>mode</code> when set to <code>multichannel</code> tells the program we&rsquo;ll be listening to several different frequencies at once.</p>
+<p>Next we need to add channels and outputs. This looks like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">channels:
+  <span class="o">(</span>
+    <span class="o">{</span>
+      <span class="nv">freq</span> <span class="o">=</span> 476.7625<span class="p">;</span>
+	  <span class="nv">modulation</span> <span class="o">=</span> <span class="s2">&#34;nfm&#34;</span><span class="p">;</span>
+      outputs: 
+	  <span class="o">(</span>
+        <span class="o">{</span>
+	  <span class="nb">type</span> <span class="o">=</span> <span class="s2">&#34;icecast&#34;</span><span class="p">;</span>
+	  <span class="nv">server</span> <span class="o">=</span> <span class="s2">&#34;icecast.example.com&#34;</span><span class="p">;</span>
+          <span class="nv">port</span> <span class="o">=</span> 8000<span class="p">;</span>
+          <span class="nv">mountpoint</span> <span class="o">=</span> <span class="s2">&#34;brooklyn84-88&#34;</span><span class="p">;</span>
+          <span class="nv">name</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn Precincts 84,88&#34;</span><span class="p">;</span>
+          <span class="nv">genre</span> <span class="o">=</span> <span class="s2">&#34;Brooklyn&#34;</span><span class="p">;</span>
+		  <span class="nv">description</span> <span class="o">=</span> <span class="s2">&#34;NYPD Brooklyn Precincts 84,88 476.7625&#34;</span><span class="p">;</span>
+          <span class="nv">username</span> <span class="o">=</span> <span class="s2">&#34;source&#34;</span><span class="p">;</span>
+          <span class="nv">password</span> <span class="o">=</span> <span class="s2">&#34;password&#34;</span><span class="p">;</span>
+          <span class="o">}</span>
+        <span class="o">)</span><span class="p">;</span>
+      <span class="o">}</span>,
+</code></pre></div><p>For this block, <code>freq</code> defines the frequency we&rsquo;re looking at (make sure it&rsquo;s within range of the center frequency and bandwidth set earlier), <code>modulation</code> specifices that this is a narrowband fm station, <code>outputs</code> defines our audio streams (in this case I&rsquo;m using icecast and the settings should be relatively self explanatory. For more details on config settings, check <a href="https://github.com/szpajder/RTLSDR-Airband/wiki/Configuring-channels-for-multichannel-mode">RTLSDR-Airband&rsquo;s Wiki</a>.</p>
+<p>The above sections are just partial configs and missing closing tags and other little things. I&rsquo;ve posted full example configs in <a href="/posts/rtl-sdr-example-configs">RTLSDR-Airband Example Configs</a> for you to look at and modify for your own needs.</p>
+<p>This is a good moment to take a break for a second and figure out what frequencies you might want to be listening for. <a href="https://www.radioreference.com/">RadioReference.com</a> is your friend here as it has a databse of the frequencies of almost every city, police precinct, etc in the United States. Further, you can see if those channels are encrypted (we can&rsquo;t listen to those), using a P25 system (this tutorial won&rsquo;t work for that but I&rsquo;ll create a new one soon), or general analog broadcast (like NYPD uses and what this tutorial is set up for). I find it handy to record all these frequencies in an excel or google sheets doc where I can organize them and see what makes the most sense to listen to.</p>
+<p>Well now that you&rsquo;ve got your frequencies all picked out, it&rsquo;s time to edit the config on your raspberry pi. Use your favorite text editor to edit <code>/usr/local/etc/rtl_airband.conf</code>. For this guide, we&rsquo;ll use nano because it&rsquo;s easy <code>sudo nano /usr/local/etc/rtl_airband.conf</code>. Since we&rsquo;ve already got the config made, we can just delete everything and paste in our new one (<code>ALT+A</code> and arrow down to select all and <code>CTRL+K</code> to cut, then copy and paste in your new config).</p>
+<h2 id="run-1">Run</h2>
+<p>It&rsquo;s time to test! On a rasberry pi, RTLSDR-Airband needs to run as root to access GPU hardware so <code>sudo /usr/local/bin/rtl_airband -f</code> will start the program (provided we didn&rsquo;t break the config). In a moment you should get a waterfall readout of the channels you&rsquo;re monitoring. If the device is working properly, the small numbers should get bigger when a signal is detected - Succes! If you&rsquo;re streaming to icecast, check the server to see if the feeds are coming in (and note that the default icecast server config is limited to 2 streams and needs to be edited). Once you confirmed everything is working, kill the program with <code>CTRL+C</code>. Now you can edit the config if needed or switch over to running without any interface using <code>sudo /usr/local/bin/rtl_airband</code>. Check to see you&rsquo;re not overloading your processing power with <code>top</code> and after you confirm and close (<code>CTRL+C</code>), you can disconnect and let your pi feed data 24/7.</p>
+<p>If you need to kill the program to say edit a config the command is <code>sudo killall rtl_airband</code>. For information on logging or setting up RTLSDR-Airband as a system service, check <a href="https://github.com/szpajder/RTLSDR-Airband/wiki/Running-the-program">the docs</a>.</p>
+<h1 id="wrap-up">Wrap Up</h1>
+<p>Hopefully this information empowers you to monitor your local police (find their radio frequencies <a href="https://www.radioreference.com/">here</a> to ensure better accountability and protect the vulnerable on the ground. Icecast is a great tool for building a single place to monitor feeds for the technically less inclined who will be able to simply click your feed and listen in (maybe a future tutorial). These tools are powerful and we can use them for a lot of good with the right organization and drive.</p>
+</article>
+
+        </main><footer id="footer">
+    CC0, please steal this site
+</footer>
+
+<script src="https://giraffe.viatorci.com/script.js" site="WUBAQTEV" defer></script></body>
+</html>

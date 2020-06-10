@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://viatorci.com/posts/</loc>
+    <lastmod>2020-06-09T18:39:53-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/posts/rtl-sdr-example-configs/</loc>
+    <lastmod>2020-06-09T18:39:53-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/</loc>
+    <lastmod>2020-06-09T18:39:53-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/about/</loc>
+    <lastmod>2020-06-09T16:24:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/posts/rtlsdr-police-scanner/</loc>
+    <lastmod>2020-06-09T16:04:43-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://viatorci.com/tags/</loc>
+  </url>
+  
+</urlset>
